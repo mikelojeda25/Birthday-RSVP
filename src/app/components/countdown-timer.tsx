@@ -68,7 +68,7 @@ export function CountdownTimer() {
   );
 
   return (
-    <div className="flex gap-4 md:gap-6 justify-center scale-70 relative">
+    <div className="flex  md:gap-6 justify-center scale-60 md:scale-70 relative font-bold">
       <TimeUnit value={timeLeft.months} label="Months" />
       <TimeUnit value={timeLeft.days} label="Days" />
       <TimeUnit value={timeLeft.hours} label="Hours" />

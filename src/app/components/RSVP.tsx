@@ -11,7 +11,10 @@ export function RSVP() {
   };
 
   return (
-    <section id="rsvp" className="py-24 relative overflow-hidden px-16">
+    <section
+      id="rsvp"
+      className="py-10 md:py-24 relative overflow-hidden px-16"
+    >
       <div className="absolute inset-0 z-0">
         <video
           autoPlay
@@ -40,7 +43,7 @@ export function RSVP() {
           </div>
 
           <p className="text-2xl text-[#5D4037] font-light italic">
-            Kindly respond by June 15, 2026
+            Kindly respond by May 15, 2026
           </p>
         </motion.div>
 

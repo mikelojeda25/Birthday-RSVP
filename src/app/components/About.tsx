@@ -24,9 +24,9 @@ export function About() {
     <section
       ref={containerRef}
       id="about"
-      className="py-32 min-h-screen px-16 bg-[#fcf2e1] overflow-hidden relative"
+      className="py-16 md:py-32 min-h-screen px-16 bg-[#fcf2e1] overflow-hidden relative"
     >
-      <div className="absolute top-20 left-10 opacity-10 pointer-events-none">
+      <div className="absolute hidden md:block top-20 left-10 opacity-10 pointer-events-none">
         <h1 className="text-[15rem] font-serif text-[#AD8B73] select-none">
           25
         </h1>
@@ -82,8 +82,8 @@ export function About() {
               </h2>
             </div>
 
-            <h3 className="text-8xl md:text-9xl font-serif text-[#4A3728] leading-[0.8]">
-              Amara <br />
+            <h3 className="scale-90 ml-[-10%] md:ml-0 md:scale-100 text-8xl md:text-9xl font-serif text-[#4A3728] leading-[0.8]">
+              Amara <br className="false" />
               <span className="italic text-[#AD8B73] font-light relative">
                 Aguilar
                 <motion.span

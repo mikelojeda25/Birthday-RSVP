@@ -50,7 +50,7 @@ export function Hero() {
           transition={{ duration: 0.8 }}
           className="text-center z-10 absolute xl:static top-3/4 md:top-[55%] left-1/2 transform -translate-x-1/2 xl:translate-x-0 -translate-y-1/2 xl:-translate-y-0 w-[500px]"
         >
-          <div className="mb-5 scale-80 md:scale-100 text-black/80 text-sm tracking-[0.3em] xl:text-[#E3CAA5] uppercase">
+          <div className="mb-2 md:mb-5 scale-80 md:scale-100 text-black/80 text-sm tracking-[0.3em] xl:text-[#E3CAA5] uppercase">
             You are cordially invited
           </div>
           <h1 className="text-6xl md:text-8xl font-serif text-[#dbb125] mb-5 xl:mb-10">

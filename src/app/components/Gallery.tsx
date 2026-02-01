@@ -40,7 +40,7 @@ export function Gallery() {
   ];
 
   return (
-    <section id="gallery" className="py-24 bg-white relative">
+    <section id="gallery" className="py-16 md:py-24 bg-white relative">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}

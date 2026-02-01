@@ -22,7 +22,7 @@ export function Details() {
   return (
     <section
       id="details"
-      className="py-32 px-6 bg-[#FAF9F6] relative overflow-hidden "
+      className="py-16 md:py-32 px-6 bg-[#FAF9F6] relative overflow-hidden "
     >
       <div className="max-w-6xl mx-auto relative z-10">
         <motion.div

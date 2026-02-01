@@ -65,8 +65,8 @@ export function RSVPForm() {
   };
 
   return (
-    <div className="relative bg-white/40 backdrop-blur-md p-8 md:p-12 rounded-[3rem] border border-[#AD8B73]/20 shadow-xl shadow-[#AD8B73]/5 max-w-xl mx-auto">
-      <form onSubmit={handleSubmit} className="space-y-8">
+    <div className="relative bg-white/40 backdrop-blur-md md:p-12 rounded-[3rem]">
+      <form onSubmit={handleSubmit} className="space-y-8 w-full">
         {/* Name Field */}
         <div className="space-y-3">
           <Label htmlFor="name" className="text-[#4A3728] font-serif text-lg">
