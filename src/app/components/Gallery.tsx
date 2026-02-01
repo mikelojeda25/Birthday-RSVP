@@ -1,40 +1,73 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { ImageWithFallback } from "@/app/components/imgSettings/ImageWithFallback";
+
+import img2 from "@/app/images/2.jpg";
+import imgA from "@/app/images/a.jpg";
+import imgB from "@/app/images/b.jpg";
+import imgC from "@/app/images/c.jpg";
+import imgD from "@/app/images/d.jpg";
+import imgE from "@/app/images/e.jpg";
+import imgF from "@/app/images/f.jpg";
+import imgG from "@/app/images/g.jpg";
+import imgH from "@/app/images/h.jpg";
+import imgI from "@/app/images/i.jpg";
+import imgJ from "@/app/images/j.jpg";
+import aboutImg from "@/app/images/about.png";
+
 const fadeInUp = {
-  initial: { opacity: 0, y: 30 },
+  initial: { opacity: 0, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { duration: 0.6 },
+  transition: { duration: 0.4 },
 };
+
 export function Gallery() {
+  const images = [
+    imgA,
+    img2,
+    imgB,
+    imgC,
+    imgD,
+    imgE,
+    imgF,
+    imgG,
+    imgH,
+    imgI,
+    imgJ,
+    aboutImg,
+  ];
+
   return (
-    <section id="gallery" className="py-24 px-4">
-      <div className="max-w-4xl mx-auto">
-        <motion.div {...fadeInUp} className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif mb-4 text-[#D4AF37]">
-            Gallery
-          </h2>
-          <p className="text-lg text-[#FDFCF0]/70">
-            Moments of elegance and celebration
-          </p>
+    <section id="gallery" className="py-24 bg-white relative">
+      <div className="max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="text-center mb-20 space-y-4"
+        >
+          <h3 className="text-5xl md:text-6xl font-serif text-[#4A3728]">
+            <span className="italic font-light text-[#AD8B73]">Gallery</span>
+          </h3>
+          <div className="w-24 h-[1px] bg-[#AD8B73]/30 mx-auto"></div>
         </motion.div>
 
-        <motion.div {...fadeInUp} className="flex flex-col items-center gap-4">
-          <div className="w-full aspect-video max-w-2xl">
-            <ImageWithFallback
-              src="https://images.unsplash.com/photo-1768508950637-7ecb769e686c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwZm9ybWFsJTIwZGlubmVyJTIwcGFydHl8ZW58MXx8fHwxNzY5NzkzODcxfDA&ixlib=rb-4.1.0&q=80&w=1080"
-              alt="Elegant dinner"
-              className="w-full h-full object-cover rounded-lg border border-[#D4AF37]/20"
-            />
-          </div>
-          <div className="w-full aspect-square max-w-sm">
-            <ImageWithFallback
-              src="https://images.unsplash.com/photo-1768297087596-c4c0e6e1f542?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwZ29sZCUyMGNoYW1wYWduZSUyMGdsYXNzZXMlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Njk3OTM4NzF8MA&ixlib=rb-4.1.0&q=80&w=1080"
-              alt="Champagne"
-              className="w-full h-full object-cover rounded-lg border border-[#D4AF37]/20"
-            />
-          </div>
-        </motion.div>
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-[1px] md:gap-2 px-1">
+          {images.map((img, index) => (
+            <motion.div
+              key={index}
+              {...fadeInUp}
+              className="aspect-square relative overflow-hidden"
+            >
+              <ImageWithFallback
+                src={img}
+                className="w-full h-full object-cover hover:scale-105 transition duration-500"
+              />
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

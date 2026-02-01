@@ -1,4 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import {
@@ -16,7 +19,7 @@ import {
   TableRow,
 } from "@/app/components/ui/table";
 import { Badge } from "@/app/components/ui/badge";
-import { Trash2, Lock, Download } from "lucide-react";
+import { Trash2, Lock, Download, RefreshCw, Users } from "lucide-react";
 import { projectId, publicAnonKey } from "../../../utils/supabase/info";
 import { toast } from "sonner";
 
@@ -61,17 +64,16 @@ export function AdminDashboard() {
         setRsvps(data.rsvps || []);
       } else {
         toast.error("Failed to fetch RSVPs");
-        console.error("Failed to fetch RSVPs:", await response.text());
       }
     } catch (error) {
       toast.error("An error occurred");
-      console.error("Fetch RSVPs error:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to remove this guest?")) return;
     try {
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/make-server-c6c41ee9/rsvp/${id}?password=${encodeURIComponent(password)}`,
@@ -84,14 +86,13 @@ export function AdminDashboard() {
       );
 
       if (response.ok) {
-        toast.success("RSVP deleted");
+        toast.success("Guest removed from list");
         setRsvps(rsvps.filter((r) => r.id !== id));
       } else {
         toast.error("Failed to delete RSVP");
       }
     } catch (error) {
       toast.error("An error occurred");
-      console.error("Delete RSVP error:", error);
     }
   };
 
@@ -100,174 +101,182 @@ export function AdminDashboard() {
       toast.error("No RSVPs to export");
       return;
     }
-
-    // CSV headers
     const headers = ["Name", "Email", "Status", "Dietary Restrictions", "Date"];
     const rows = rsvps.map((rsvp) => [
       rsvp.name,
       rsvp.email,
       rsvp.attending ? "Attending" : "Declined",
-      rsvp.dietaryRestrictions || "",
+      rsvp.dietaryRestrictions || "None",
       new Date(rsvp.createdAt).toLocaleDateString(),
     ]);
 
-    // Create CSV content
     const csvContent = [
       headers.join(","),
       ...rows.map((row) =>
-        row
-          .map((cell) => {
-            // Escape quotes and wrap in quotes if contains comma
-            const escaped = String(cell).replace(/"/g, '""');
-            return escaped.includes(",") ? `"${escaped}"` : escaped;
-          })
-          .join(","),
+        row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","),
       ),
     ].join("\n");
 
-    // Create blob and download
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
+    link.href = URL.createObjectURL(blob);
     link.setAttribute(
       "download",
-      `birthday-rsvps-${new Date().toISOString().split("T")[0]}.csv`,
+      `guest-list-${new Date().toISOString().split("T")[0]}.csv`,
     );
-    link.style.visibility = "hidden";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    toast.success("RSVPs exported as CSV");
+    toast.success("Guest list exported successfully");
   };
 
   useEffect(() => {
     if (isAuthenticated && password) {
-      const interval = setInterval(() => {
-        fetchRSVPs(password);
-      }, 10000); // Refresh every 10 seconds
-
+      const interval = setInterval(() => fetchRSVPs(password), 30000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated, password]);
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#1B3022] flex items-center justify-center p-4">
-        <Card className="max-w-md w-full bg-[#1B3022]/50 border-[#D4AF37]/30">
-          <CardHeader>
-            <CardTitle className="text-2xl text-[#D4AF37] flex items-center gap-2">
-              <Lock className="h-6 w-6" />
-              Admin Access
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Input
-              type="password"
-              placeholder="Enter admin password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-              className="bg-[#121212]/50 border-[#D4AF37]/30 text-[#FDFCF0]"
-            />
-            <Button
-              onClick={handleLogin}
-              className="w-full bg-[#D4AF37] hover:bg-[#B8941F] text-[#121212]"
-            >
-              Login
-            </Button>
-            <p className="text-sm text-[#FDFCF0]/50 text-center">
-              Default password: admin2026
-            </p>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-[#FFFBE9] flex items-center justify-center p-4 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Card className="max-w-md w-full bg-white border-2 border-[#D4AF37]/30 shadow-2xl rounded-[2rem]">
+            <CardHeader className="text-center pt-10">
+              <div className="mx-auto bg-[#AD8B73]/10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                <Lock className="h-8 w-8 text-[#AD8B73]" />
+              </div>
+              <CardTitle className="text-3xl font-serif text-[#4A3728]">
+                Admin Vault
+              </CardTitle>
+              <p className="text-[#AD8B73] text-sm">
+                Please enter the security key to view guests
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6 pb-12 px-10">
+              <Input
+                type="password"
+                placeholder="Security Key"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                className="bg-gray-50 border-[#AD8B73]/30 text-[#4A3728] h-14 rounded-xl focus-visible:ring-[#4A3728]"
+              />
+              <Button
+                onClick={handleLogin}
+                className="w-full bg-[#4A3728] hover:bg-black text-white h-14 rounded-xl text-lg font-serif transition-all"
+              >
+                Submit the Key
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     );
   }
 
   const attendingCount = rsvps.filter((r) => r.attending).length;
-  const decliningCount = rsvps.filter((r) => !r.attending).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#1B3022] p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-serif text-[#D4AF37]">Guest List</h1>
-          <div className="flex gap-2">
+    <div className="min-h-screen bg-[#FFFBE9] p-6 md:p-12">
+      <div className="max-w-6xl mx-auto">
+        {/* Header Area */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+          <div>
+            <h1 className="text-5xl font-serif text-[#4A3728] mb-2 text-center md:text-left">
+              Guest Registry
+            </h1>
+            <p className="text-[#AD8B73] text-center md:text-left tracking-widest uppercase text-xs">
+              The 25th Celebration • Private Access
+            </p>
+          </div>
+          <div className="flex gap-3">
             <Button
-              onClick={() => exportToCSV()}
-              disabled={rsvps.length === 0}
-              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+              onClick={exportToCSV}
+              variant="outline"
+              className="border-[#AD8B73] text-[#4A3728] hover:bg-[#AD8B73] hover:text-white rounded-full px-6"
             >
-              <Download className="h-4 w-4" />
-              Export CSV
+              <Download className="mr-2 h-4 w-4" /> Export CSV
             </Button>
             <Button
               onClick={() => fetchRSVPs(password)}
               disabled={loading}
-              className="bg-[#D4AF37] hover:bg-[#B8941F] text-[#121212]"
+              className="bg-[#D4AF37] hover:bg-[#B8860B] text-white rounded-full px-6"
             >
-              {loading ? "Refreshing..." : "Refresh"}
+              <RefreshCw
+                className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`}
+              />
+              {loading ? "Syncing..." : "Refresh List"}
             </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card className="bg-[#1B3022]/50 border-[#D4AF37]/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-[#FDFCF0]/70">
-                Total RSVPs
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-[#D4AF37]">
-                {rsvps.length}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#1B3022]/50 border-[#D4AF37]/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-[#FDFCF0]/70">
-                Attending
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-500">
-                {attendingCount}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#1B3022]/50 border-[#D4AF37]/30">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-[#FDFCF0]/70">
-                Declining
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-500">
-                {decliningCount}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {[
+            {
+              label: "Total Responses",
+              val: rsvps.length,
+              icon: <Users className="text-[#AD8B73]" />,
+            },
+            {
+              label: "Confirmed Attending",
+              val: attendingCount,
+              icon: <div className="w-3 h-3 bg-green-500 rounded-full" />,
+            },
+            {
+              label: "Declined",
+              val: rsvps.length - attendingCount,
+              icon: <div className="w-3 h-3 bg-gray-300 rounded-full" />,
+            },
+          ].map((stat, i) => (
+            <Card
+              key={i}
+              className="bg-white border border-[#AD8B73]/20 shadow-sm rounded-3xl"
+            >
+              <CardContent className="p-6 flex items-center justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-tighter text-[#AD8B73] font-bold mb-1">
+                    {stat.label}
+                  </p>
+                  <p className="text-4xl font-serif text-[#4A3728]">
+                    {stat.val}
+                  </p>
+                </div>
+                {stat.icon}
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        <Card className="bg-[#1B3022]/50 border-[#D4AF37]/30">
+        {/* Guest Table */}
+        <Card className="bg-white border border-[#AD8B73]/20 shadow-xl rounded-[2.5rem] overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader>
-                  <TableRow className="border-[#D4AF37]/20">
-                    <TableHead className="text-[#D4AF37]">Name</TableHead>
-                    <TableHead className="text-[#D4AF37]">Email</TableHead>
-                    <TableHead className="text-[#D4AF37]">Status</TableHead>
-                    <TableHead className="text-[#D4AF37]">
-                      Dietary Notes
+                <TableHeader className="bg-gray-50/50">
+                  <TableRow className="border-b border-[#AD8B73]/10">
+                    <TableHead className="py-6 px-8 text-[#4A3728] font-bold uppercase text-[10px] tracking-widest">
+                      Full Name
                     </TableHead>
-                    <TableHead className="text-[#D4AF37]">Date</TableHead>
-                    <TableHead className="text-[#D4AF37]">Actions</TableHead>
+                    <TableHead className="text-[#4A3728] font-bold uppercase text-[10px] tracking-widest">
+                      Email Address
+                    </TableHead>
+                    <TableHead className="text-[#4A3728] font-bold uppercase text-[10px] tracking-widest text-center">
+                      Status
+                    </TableHead>
+                    <TableHead className="text-[#4A3728] font-bold uppercase text-[10px] tracking-widest">
+                      Dietary Requirements
+                    </TableHead>
+                    <TableHead className="text-[#4A3728] font-bold uppercase text-[10px] tracking-widest">
+                      Date
+                    </TableHead>
+                    <TableHead className="text-[#4A3728] font-bold uppercase text-[10px] tracking-widest text-right px-8">
+                      Actions
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -275,42 +284,49 @@ export function AdminDashboard() {
                     <TableRow>
                       <TableCell
                         colSpan={6}
-                        className="text-center text-[#FDFCF0]/50 py-8"
+                        className="text-center py-20 text-[#AD8B73] italic"
                       >
-                        No RSVPs yet
+                        No guests have registered yet.
                       </TableCell>
                     </TableRow>
                   ) : (
                     rsvps.map((rsvp) => (
-                      <TableRow key={rsvp.id} className="border-[#D4AF37]/10">
-                        <TableCell className="text-[#FDFCF0] font-medium">
+                      <TableRow
+                        key={rsvp.id}
+                        className="border-b border-gray-50 hover:bg-[#FFFBE9]/50 transition-colors"
+                      >
+                        <TableCell className="py-5 px-8 text-[#4A3728] font-medium">
                           {rsvp.name}
                         </TableCell>
-                        <TableCell className="text-[#FDFCF0]/70">
+                        <TableCell className="text-[#AD8B73] text-sm">
                           {rsvp.email}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-center">
                           <Badge
-                            variant={rsvp.attending ? "default" : "destructive"}
-                            className={
-                              rsvp.attending ? "bg-green-600" : "bg-red-600"
-                            }
+                            className={`rounded-full px-4 py-1 text-[10px] uppercase font-bold tracking-widest shadow-none ${
+                              rsvp.attending
+                                ? "bg-green-100 text-green-700 border border-green-200"
+                                : "bg-gray-100 text-gray-500 border border-gray-200"
+                            }`}
                           >
-                            {rsvp.attending ? "Attending" : "Declined"}
+                            {rsvp.attending ? "Confirmed" : "Declined"}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-[#FDFCF0]/70 max-w-xs truncate">
+                        <TableCell className="text-[#4A3728] text-sm max-w-xs italic truncate">
                           {rsvp.dietaryRestrictions || "—"}
                         </TableCell>
-                        <TableCell className="text-[#FDFCF0]/70">
-                          {new Date(rsvp.createdAt).toLocaleDateString()}
+                        <TableCell className="text-[#AD8B73] text-xs">
+                          {new Date(rsvp.createdAt).toLocaleDateString(
+                            undefined,
+                            { month: "short", day: "numeric" },
+                          )}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-right px-8">
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="icon"
                             onClick={() => handleDelete(rsvp.id)}
-                            className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                            className="text-gray-300 hover:text-red-500 transition-colors"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>

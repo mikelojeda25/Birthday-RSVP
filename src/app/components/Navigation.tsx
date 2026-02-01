@@ -53,12 +53,12 @@ export function Navigation() {
       variants={navVariants}
       initial="initial"
       animate="animate"
-      className="w-full py-4 px-6 top-0 z-50 fixed bg-transparent md:bg-[#AD8B73] md:border-b md:border-[#D4AF37]/20"
+      className="w-full py-4 px-6 top-0 z-50 fixed bg-transparent md:bg-white md:border-b md:border-[#D4AF37]/20"
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <motion.div
           variants={linkVariants}
-          className="hidden md:block text-2xl font-serif text-[#FFFBE9]"
+          className="hidden md:block text-2xl font-serif text-[#3E2723]"
         >
           The 25th
         </motion.div>
@@ -69,7 +69,7 @@ export function Navigation() {
               key={link.name}
               href={link.href}
               variants={linkVariants}
-              className="text-[#FFFBE9]/80 hover:text-[#eec02a] hover:font-medium transition-colors uppercase tracking-wider text-sm"
+              className="text-[#3E2723]/80 hover:text-[#D4AF37] hover:scale-130 transition-colors uppercase tracking-wider text-sm"
             >
               {link.name}
             </motion.a>

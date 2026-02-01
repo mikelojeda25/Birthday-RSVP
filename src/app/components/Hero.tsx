@@ -1,21 +1,15 @@
 import { motion } from "framer-motion";
 import { CountdownTimer } from "@/app/components/countdown-timer";
 import { Separator } from "@/app/components/ui/separator";
-import imgA from "@/app/images/a.jpg";
-import imgB from "@/app/images/b.jpg";
-import imgC from "@/app/images/c.jpg";
-import imgD from "@/app/images/d.jpg";
-import imgE from "@/app/images/e.jpg";
-import imgF from "@/app/images/f.jpg";
-import imgG from "@/app/images/g.jpg";
-import imgH from "@/app/images/h.jpg";
+import imgB from "@/app/images/2.jpg";
+import imgD from "@/app/images/1.jpg";
+import imgF from "@/app/images/3.jpg";
 import imgI from "@/app/images/i.jpg";
-import imgJ from "@/app/images/j.jpg";
 
 const containerVariants = {
   animate: {
     transition: {
-      staggerChildren: 0.2, // Ang gap ng bawat box
+      staggerChildren: 0.2,
     },
   },
 };
@@ -23,8 +17,6 @@ const containerVariants = {
 const itemVariants = {
   initial: (i: number) => ({
     opacity: 0,
-    // Kung i ay even (0, 2), manggagaling sa taas (y: -100)
-    // Kung i ay odd (1, 3), manggagaling sa baba (y: 100)
     y: i % 2 === 0 ? -100 : 100,
   }),
   animate: {
@@ -40,14 +32,14 @@ export function Hero() {
   const boxes = [
     { className: "mt-20", src: imgI },
     { className: "", src: imgB },
-    { className: "mt-20", src: imgD },
-    { className: "", src: imgC },
+    { className: "mt-20", src: imgF },
+    { className: "", src: imgD },
   ];
 
   return (
     <section
       id="home"
-      className="h-svh flex flex-col-reverse xl:flex-row items-center justify-around px-20 py-20 relative overflow-hidden md:bg-white/70  xl:bg-[#FFFBE9]"
+      className="h-svh flex flex-col-reverse xl:flex-row items-center justify-around px-20 py-20 relative overflow-hidden md:bg-white/70  xl:bg-[#FFFBE9] 2xl:px-35"
     >
       <span className="absolute bottom-0 left-0 w-full h-[70%] bg-gradient-to-t from-[#FFFBE9] via-white to-transparent pointer-events-none md:hidden"></span>
 
@@ -56,9 +48,9 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="text-center z-10 absolute xl:static top-3/4 md:top-[55%] left-1/2 transform -translate-x-1/2 xl:translate-x-0 -translate-y-1/2 xl:-translate-y-0"
+          className="text-center z-10 absolute xl:static top-3/4 md:top-[55%] left-1/2 transform -translate-x-1/2 xl:translate-x-0 -translate-y-1/2 xl:-translate-y-0 w-[500px]"
         >
-          <div className="scale-80 md:scale-100 text-black/80 text-sm tracking-[0.3em] xl:text-[#E3CAA5] uppercase">
+          <div className="mb-5 scale-80 md:scale-100 text-black/80 text-sm tracking-[0.3em] xl:text-[#E3CAA5] uppercase">
             You are cordially invited
           </div>
           <h1 className="text-6xl md:text-8xl font-serif text-[#dbb125] mb-5 xl:mb-10">
@@ -70,7 +62,7 @@ export function Hero() {
           <p className="text-xl md:text-4xl :text-xl text-black/80 md:text-black/60 xl:text-[#AD8B73]/60 md:mb-12">
             May 25, 2026 • 5:00 PM
           </p>
-          <Separator className="max-w-xs mx-auto my-8 hidden md:block" />
+          <Separator className="max-w-xs mx-auto mt-8 hidden md:block" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -79,9 +71,17 @@ export function Hero() {
             <CountdownTimer />
           </motion.div>
 
-          <button className="mt-8 px-8 py-3 bg-[#D4AF37] text-[#FFFBE9] rounded-md font-medium hover:bg-[#CEAB93] transition-colors duration-300 cursor-pointer">
-            Are you going?
-          </button>
+          <a
+            href="#rsvp"
+            className="mt-5 inline-flex items-center justify-center px-20 py-4 bg-[#3E2723] text-[#FAF9F6] border border-[#AD8B73]/20 rounded-full text-[10px] md:text-xs uppercase tracking-[0.3em] font-semibold hover:bg-[#5D4037] hover:scale-105 transition-all duration-500 cursor-pointer shadow-md shadow-[#3E2723]/10 relative group overflow-hidden"
+          >
+            {/* Subtle shimmer effect inside */}
+            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+
+            <span className="relative z-10 text-center">
+              Confirm Attendance
+            </span>
+          </a>
         </motion.div>
 
         <motion.div
@@ -109,6 +109,7 @@ export function Hero() {
             <img
               src={box.src}
               alt={`Image ${i + 1}`}
+              loading="eager"
               className="h-full w-full object-cover rounded-2xl hover:scale-105 transition-transform duration-500"
             />
             <div className="h-50 md:h-140  w-[100%] bg-[#E3CAA5]/10 rounded-2xl -mt-[550px] ml-2 bg-gradient-to-t from-black/5 to-transparent p-4"></div>

@@ -24,7 +24,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
       <Toaster position="top-center" richColors />
 
       <Navigation />
@@ -41,24 +41,50 @@ export default function App() {
       <RSVP />
 
       {/* Footer */}
-      <footer className="py-16 px-4 border-t border-[#D4AF37]/20">
-        <div className="max-w-2xl mx-auto text-center">
-          <p className="text-[#FDFCF0]/50 mb-4">
-            For inquiries, please contact us at{" "}
-            <a
-              href="mailto:event@the25th.com"
-              className="text-[#D4AF37] hover:underline"
+      <footer className="py-20 px-6 bg-[#FAF9F6] border-t border-[#AD8B73]/10 relative">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Decorative Initial or Logo */}
+          <div className="mb-8">
+            <span className="font-serif text-3xl text-[#AD8B73]/40 italic tracking-widest">
+              A
+            </span>
+          </div>
+
+          <div className="space-y-4">
+            <h4 className="text-[#4A3728] font-serif text-lg tracking-wide">
+              Questions about the evening?
+            </h4>
+            <p className="text-[#5C4033]/60 font-light">
+              Please reach out to our concierge at{" "}
+              <a
+                href="mailto:mikelojeda25@gmail.com"
+                className="text-[#AD8B73] hover:text-[#4A3728] transition-colors font-medium border-b border-[#AD8B73]/30"
+              >
+                mikelojeda25@gmail.com
+              </a>
+            </p>
+          </div>
+
+          {/* Elegant Divider */}
+          <div className="flex items-center justify-center gap-4 my-12">
+            <div className="h-[1px] w-16 bg-[#AD8B73]/20" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#AD8B73]/40" />
+            <div className="h-[1px] w-16 bg-[#AD8B73]/20" />
+          </div>
+
+          {/* Bottom Credits & Hidden Admin Link */}
+          <div className="flex flex-col items-center gap-6">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#AD8B73]/60 font-bold">
+              Twenty-Five & Grace — 2026
+            </p>
+
+            <button
+              onClick={() => setShowAdmin(true)}
+              className="text-[10px] uppercase tracking-widest text-[#AD8B73]/30 hover:text-[#4A3728] transition-all duration-300"
             >
-              event@the25th.com
-            </a>
-          </p>
-          <Separator className="max-w-xs mx-auto my-8 bg-[#D4AF37]/20" />
-          <button
-            onClick={() => setShowAdmin(true)}
-            className="text-xs text-[#FDFCF0]/30 hover:text-[#D4AF37] transition-colors"
-          >
-            Guest List
-          </button>
+              Manage Guest List
+            </button>
+          </div>
         </div>
       </footer>
     </div>
