@@ -66,7 +66,7 @@ export function RSVPForm() {
 
   return (
     <div className="relative bg-white/40 backdrop-blur-md md:p-12 rounded-[3rem]">
-      <form onSubmit={handleSubmit} className="space-y-8 w-full">
+      <form onSubmit={handleSubmit} className="space-y-8 ">
         {/* Name Field */}
         <div className="space-y-3">
           <Label htmlFor="name" className="text-[#4A3728] font-serif text-lg">
@@ -180,7 +180,7 @@ export function RSVPForm() {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#4A3728] hover:bg-[#2D2118] text-white font-serif py-8 text-xl rounded-2xl transition-all duration-300 shadow-lg shadow-[#4A3728]/20 group"
+          className="w-full bg-[#dbb125] hover:bg-[#2D2118] text-white font-serif py-8 text-xl rounded-2xl transition-all duration-300 shadow-lg shadow-[#4A3728]/20 group"
         >
           {loading ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
