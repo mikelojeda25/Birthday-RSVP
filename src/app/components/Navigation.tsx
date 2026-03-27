@@ -69,7 +69,7 @@ export function Navigation() {
               key={link.name}
               href={link.href}
               variants={linkVariants}
-              className="text-[#3E2723]/80 hover:text-[#D4AF37] hover:scale-130 transition-colors uppercase tracking-wider text-sm"
+              className="text-[#3E2723]/80 hover:text-[#D4AF37] transition-colors uppercase tracking-wider text-sm"
             >
               {link.name}
             </motion.a>
