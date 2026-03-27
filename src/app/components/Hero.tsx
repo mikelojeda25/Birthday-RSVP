@@ -104,7 +104,7 @@ export function Hero() {
             key={i}
             custom={i}
             variants={itemVariants}
-            className={`h-50 md:h-140 w-[17%] bg-[#E3CAA5] rounded-2xl ${box.className}`}
+            className={`h-50 md:h-140 w-[17%] rounded-2xl ${box.className}`}
           >
             <img
               src={box.src}
